@@ -17,5 +17,5 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^bored_no_more_app/', include('apps.bored_no_more_app.urls'))
+    url(r'^', include('apps.bored_no_more_app.urls'))
 ]
