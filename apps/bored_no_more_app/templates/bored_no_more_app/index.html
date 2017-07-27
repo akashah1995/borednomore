@@ -1,0 +1,175 @@
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Bored No More</title>
+        <script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>        -->
+    <style>
+        .container {
+            background-color:teal;
+            
+        }
+        .header {
+            background-color: darkblue;
+
+        }
+        h1 {
+            color: white;
+        }
+        #results {
+            background-color:aliceblue;
+            border-style: dashed;
+        }
+    </style>
+    </head>
+    <body>
+        <div class= 'container'>
+            <div class='header'>
+            <h1>Bored No More</h1>
+            </div>
+            <form action="/bored_no_more_app/getcategory" method="post">
+            {% csrf_token %}
+                <label for="user_input">Choose an Event Category</label>
+                <select name ='category'>
+                    <option id ="categories" value="comedy">Comedy</option>
+                    <option id ="categories" value="music">music</option>
+                    <option id ="categories" value="family_fun_kids">family fun kids</option>
+                    <option id ="categories" value="festivals_parades">festivals parades</option>
+                    <option id ="categories" value="movies_film">movies film</option>
+                    <option id ="categories" value="singles_social">singles social</option>
+                    <option id ="categories" value="outdoors_recreation">outdoors recreation</option>
+                    <option id ="categories" value="sports">sports</option>
+                    <option id ="categories" value="food">food</option>
+                </select>
+                <label for="location">Enter a location</label>
+                <input type="type" name='location' id='location'>
+                <input type="submit" value="search">
+            </form>
+            <div id="results"></div>
+           
+        </div>
+        <script>
+            //function is used for displaying all events that were searched
+            $(document).ready(
+                function() {
+                    // $('#categories').click(
+                    //     function(){
+                    //         $.ajax({
+                    //             url: '/bored_no_more_app/getcategory',
+                    //             method: 'post',
+                    //             data: $(this).serialize(),
+                    //             success: //converts the characters for the internet to use
+                    $('form').submit(
+                        function( ) {
+                            $.post(
+                                $(this).attr('action'),
+                                $(this).serialize( ),
+                                function(res){
+                                    // pay careful attention to the response object
+                                    console.log('the response object:');
+                                    console.log(res);
+                                    console.log(res.events.event.length)
+                                    if (res.events.event.length !== 0) {
+                                        $('#results').html(" ")
+                                        for(var i=0; i < res.events.event.length; i++) {
+                                            if(res.events.event[i].image !=null && res.events.event[i].image.url != null){
+                                                if(i > 0){
+                                                    if((logo != "<img src='" + res.events.event[i].image.url + "'></img>") && (name != "<h4> " + res.events.event[i].title +"</h4>")){
+                                                        logo = "<img src='" + res.events.event[i].image.url + "'></img>";
+                                                        name = "<h4> " + res.events.event[i].title +"</h4>";
+                                                        $('#results').append(name);
+                                                        $('#results').append(logo);
+                                                        if(res.events.event[i].start_time !=null){
+                                                            start_time = "<p>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                            $('#results').append(start_time);
+                                                        }
+                                                        if(res.events.event[i].stop_time !=null){
+                                                            stop_time = "<p>Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                            $('#results').append(stop_time);
+                                                        }
+                                                        if(res.events.event[i].description !=null){
+                                                            desc = "<h5>Description: " + res.events.event[i].description+ "</h5>";
+                                                            $('#results').append(desc);
+                                                        
+                                                        }
+                                                    }
+                                                }
+                                                if(i==0){
+                                                    logo = "<img src='" + res.events.event[i].image.url + "'></img>";
+                                                    name = "<h4> " + res.events.event[i].title +"</h4>";
+                                                    desc = "<h5>" + res.events.event[i].description+ "</h5>"
+                                                    $('#results').append(name);
+                                                    $('#results').append(logo);
+                                                    if(res.events.event[i].start_time !=null){
+                                                        start_time = "<p div class = 'start_time'>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                        $('#results').append(start_time);
+                                                        }
+                                                    if(res.events.event[i].stop_time !=null){
+                                                        stop_time = "<p>Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                        $('#results').append(stop_time);
+                                                    }
+                                                    if(res.events.event[i].description !=null){
+                                                        desc = "<h5>Description " + res.events.event[i].description+ "</h5>";
+                                                        $('#results').append(desc);
+                                                    }
+                                                }
+                                            }
+                                            else{
+                                                if(i > 0){
+                                                    if(name != "<h4> " + res.events.event[i].title +"</h4>"){
+                                                        name = "<h4> " + res.events.event[i].title +"</h4>";
+                                                        desc = "<h5>" + res.events.event[i].description+ "</h5>"
+                                                        $('#results').append(name);
+                                                        if(res.events.event[i].start_time !=null){
+                                                            start_time = "<p>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                            $('#results').append(start_time);
+                                                        }
+                                                        if(res.events.event[i].stop_time !=null){
+                                                            stop_time = "<p>Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                            $('#results').append(stop_time);
+                                                    }
+                                                        if(res.events.event[i].description !=null){
+                                                            desc = "<h5>Description: " + res.events.event[i].description+ "</h5>";
+                                                            $('#results').append(desc);
+                                                        }
+                                                    }
+                                                }
+                                                if(i==0){
+                                                    name = "<h4> " + res.events.event[i].title +"</h4>";
+                                                    desc = "<h5>" + res.events.event[i].description+ "</h5>"
+                                                    $('#results').append(name);
+                                                    if(res.events.event[i].start_time !=null){
+                                                        start_time = "<p>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                        $('#results').append(start_time);
+                                                        }
+                                                    if(res.events.event[i].stop_time !=null){
+                                                        stop_time = "<p> Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                        $('#results').append(stop_time);
+                                                    }
+                                                    if(res.events.event[i].description !=null){
+                                                            desc = "<h5>Description: " + res.events.event[i].description+ "</h5>";
+                                                            $('#results').append(desc);
+                                                    }
+                                                }
+                                            }   
+                                        }
+                                    }
+                                    else {
+                                        html_string = "Not Found";
+                                    }
+                                },'json'
+                            );
+                            return false;
+                        }
+                    );
+                }
+            );
+
+        </script>
+    </body>
+</html>
