@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'getcategory$', views.getcategory)
+    url(r'getcategory$', views.getcategory),
+    url(r'getpage$', views.getpage)
 ]
