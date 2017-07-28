@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Bored No More</title>
+        <script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+
+    <style>
+        .container-fluid{
+            /* background-color:#eee6ff; */
+            background-image: url("http://www.lsst.ac/wp-content/uploads/hd_party_wallpaper.jpg");
+            height:56em;
+        }
+        .row{
+            text-align: center;
+        }
+        .error{
+            color:red;
+        }
+        #title{
+            margin-top:2em;
+            margin-bottom:.5em;
+            -moz-box-shadow: 0 0 10px black;
+            -webkit-box-shadow: 0 0 10px black;
+            box-shadow: 0 0 10px black;
+            text-align:center; 
+            background-color:white;
+            font-family:"Copperplate Gothic Light";
+            font-weight:bolder;
+        }
+        #borednomore{
+            font-size:40px;
+            font-weight:bold;
+
+        }
+
+        #login{
+            font-family:"Copperplate Gothic Light";
+            font-weight:bolder;
+        }
+
+        #register{
+            font-family:"Copperplate Gothic Light";
+            font-weight:bolder;
+        }
+            
+        .form-horizontal{
+            margin-top: .75em;
+            /* margin-left: 10.2em; */
+            -moz-box-shadow: 0 0 4px black;
+            -webkit-box-shadow: 0 0 4px black;
+            box-shadow: 0 0 4px black;
+            text-align:left;
+            background-color:white;
+
+        }
+
+    </style>
+
+
+
+        
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class = "form-horizontal col-sm-10 col-sm-offset-1" id = "title">
+                    
+                    <h1 id = "borednomore" >Bored No More</h1>
+                    <p>The all inclusive website to turn your boring day around!</p>
+                    {% for message in messages %}
+                    <p class = "error">{{message}}</p>
+                    {% endfor %}
+            </div>
+            <form class="form-horizontal col-sm-10 col-sm-offset-1" action = '/login' method = 'POST'>
+                {% csrf_token %}
+                <div class ="form-group">
+                    <div class = 'col-sm-6'>
+                        <h3 class = 'col-sm-offset-2' id = "login" >Login</h3>
+                    </div>
+                </div>
+            
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">Username</label>
+                    <div class="col-sm-6">
+                    <input type="username" name = 'username' class="form-control" id="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-6">
+                    <input type="password" name = 'password' class="form-control" id="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6">
+                    <button type="submit" class="btn btn-default">Login</button>
+                    </div>
+                </div>
+            </form> 
+           <form class="form-horizontal col-sm-10 col-sm-offset-1" action = '/register' method = 'post'>
+                {% csrf_token %}
+                <div class ="form-group">
+                    <div class = 'col-sm-6'>
+                        <h3 class = 'col-sm-offset-2'id = "login" >Register</h3>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="firstname" class="col-sm-2 control-label">First Name</label>
+                    <div class="col-sm-6">
+                    <input type="firstname" name = 'firstname' class="form-control" id="firstname" placeholder="First Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">Username</label>
+                    <div class="col-sm-6">
+                    <input type="username" name = 'username' class="form-control" id="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-6">
+                    <input type="email" name = 'email' class="form-control" id="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-6">
+                    <input type="password" name = 'password' class="form-control" id="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmation" class="col-sm-2 control-label">Confirm Password</label>
+                    <div class="col-sm-6">
+                    <input type="password" name = 'confirmation' class="form-control" id="confirmation" placeholder="Confirm Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-6">
+                    <button type="submit" class="btn btn-default">Register</button>
+                    </div>
+                </div>
+            </form> 
+        </div>
+    </body>
+</html>
