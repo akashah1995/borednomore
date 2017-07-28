@@ -1,11 +1,50 @@
-<<<<<<< HEAD
-=======
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from models import *
 import requests
-from eventbrite import Eventbrite
+import bcrypt
 # HTML-based index method
+
+def intro(request):
+    return render(request, 'bored_no_more_app/intro.html')
+
+def register(request):
+    errors = User.objects.basic_validator(request.POST)
+    if len(errors):
+        for tag, error in errors.iteritems():
+            messages.error(request, error, extra_tags = tag)
+        return redirect(intro)
+    else:
+        firstname = request.POST['firstname']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
+        print firstname, username, email, password
+        User.objects.create(firstname = firstname, username = username, email = email, password = password)
+        return redirect(index)
+
+def login(request):
+    try:
+        user = User.objects.get(username = request.POST['username'])
+    except:
+        messages.error(request, "The username entered is not in our database, please try again!", extra_tags = "loginerror")
+        return redirect(intro)
+
+    password = request.POST['password']
+    correctpw = user.password
+    print password
+    print correctpw
+
+    if bcrypt.checkpw(password.encode(), correctpw.encode()):
+        return redirect(index)
+
+    else:
+        messages.error(request, "The password associated with that username was not provided", extra_tags = "loginerror")
+        return redirect(intro)
+    
+
+
+
 def index(request):
     return render(request, 'bored_no_more_app/index.html')
 def getcategory(request):
@@ -26,4 +65,3 @@ def getcategory(request):
     # we don't jsonify it as it is already in JSON format!
     print "hello"
     return HttpResponse(response, content_type='application/json')
->>>>>>> a33d4634387479cbd354ada78ccf115776224d0a
