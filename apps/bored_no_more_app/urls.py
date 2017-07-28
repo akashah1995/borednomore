@@ -6,5 +6,7 @@ urlpatterns = [
     url(r'home$', views.index),
     url(r'getcategory$', views.getcategory),
     url(r'register$', views.register),
-    url(r'login$', views.login)
+    url(r'login$', views.login),
+    url(r'^$', views.index),
+    url(r'getpage$', views.getpage)
 ]
