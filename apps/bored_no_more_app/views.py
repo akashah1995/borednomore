@@ -8,6 +8,9 @@ import bcrypt
 def intro(request):
     return render(request, 'bored_no_more_app/intro.html')
 
+def index(request):
+    return render(request, 'bored_no_more_app/index.html')
+
 def register(request):
     errors = User.objects.basic_validator(request.POST)
     if len(errors):
@@ -41,13 +44,7 @@ def login(request):
     else:
         messages.error(request, "The password associated with that username was not provided", extra_tags = "loginerror")
         return redirect(intro)
-    
 
-
-
-def index(request):
-    
-    return render(request, 'bored_no_more_app/index.html')
 def getcategory(request):
     category = request.POST['category']
     location = request.POST['location'].replace(" ","+")
@@ -57,7 +54,7 @@ def getcategory(request):
     print location
     #category = "movies_film"
     #url = "http://eventful.com/oauth/authorize?oauth_token=6ea35d914da91eec8c00"
-    url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=" +category+ "&location=" +location+ "&date=ThisWeek&page_size=100"
+    url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=" +category+ "&location=" +location+ "&date=This Week&page_size=1000"
     #url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&date=ThisWeek&Location=Florida&page_size=50&"
     #url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=comedy&location=San+Diego&date=Future&page_size=20"
     # url = "https://www.eventbriteapi.com/v3/events/?token=W5AC5ZM4E7DU3FZLEWHH"
@@ -71,7 +68,6 @@ def getcategory(request):
     return HttpResponse(response, content_type='application/json')
 
 def getpage(request):
-    url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=" +category+ "&location=" +location+ "&date=ThisWeek&page_size=20"
-    redirec(index)
+    pass
 
     

@@ -55,7 +55,7 @@
             margin-left: 75em;
             text-align: right;
         }
-        #spacialize{
+        .spacialize{
             margin-top:1000px;
         }
         
@@ -64,7 +64,7 @@
     <body>
         <div class= 'container-fluid no-padding' id ='wrapper'>
             <div class='row' id='header'>
-                <div class="col-md-12"><h1>Events Near You</h1></div>
+                <div class="col-md-8 col-md-offset-0"><h1>Events Near You</h1></div>
             </div>
             <div class='row'>
             <form class="col-md-12" action="/bored_no_more_app/getcategory" method="post">
@@ -109,7 +109,7 @@
             </div>
             <div id="results">
                 Search through the many events that are happening near you!
-                <div id = "spacialize"></div>
+                <div class = "spacialize"></div>
             </div>
             <div class='row' id='page'>
             <div class="col-md-12">
@@ -144,8 +144,7 @@
                                     console.log('the response object:');
                                     console.log(res);
                                     
-                                    console.log(res.events.event.length)
-                                    if (res.events !== null) {
+                                    if (res.events != null) {
                                         $('#results').html(" ")
                                         for(var i=0; i < res.events.event.length; i++){
                                             var div = $('<div/>').html("<div id='holder'>");
@@ -156,7 +155,7 @@
                                                         name = "<h4 id ='name'>" + res.events.event[i].title +"</h4>";
                                                         
                                                         $(div).append(name);
-                                                        $(div).append(logo);
+                                                        // $(div).append(logo);
                                                         if(res.events.event[i].venue_address !=null){
                                                             venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
                                                             $(div).append(venue_address);
@@ -181,7 +180,7 @@
                                                     name = "<h4 id ='name'> " + res.events.event[i].title +"</h4>";
                                                     desc = "<h5 id ='desc'>" + res.events.event[i].description+ "</h5>"
                                                     $(div).append(name);
-                                                    $(div).append(logo);
+                                                    // $(div).append(logo);
                                                     if(res.events.event[i].venue_address !=null){
                                                             venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
                                                             $(div).append(venue_address);
@@ -256,7 +255,8 @@
                                         }
                                     }
                                     else {
-                                        $('#results').append("Not Found");
+                                        $('#results').html("<h3>No Events Found :( </h3>")
+                                        $('#results').append("<div class = 'spacialize'></div>")
                                     }
                                 },'json'
                             );
