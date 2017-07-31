@@ -48,13 +48,14 @@ def login(request):
 def getcategory(request):
     category = request.POST['category']
     location = request.POST['location'].replace(" ","+")
+    keyword = request.POST['keyword'].replace(" ", "+")
     # request.session['category'] = category
     # request.session['location'] = location
     print category
     print location
     #category = "movies_film"
     #url = "http://eventful.com/oauth/authorize?oauth_token=6ea35d914da91eec8c00"
-    url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=" +category+ "&location=" +location+ "&date=This Week&page_size=1000"
+    url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=" +category+ "&location=" +location+ "&date=This Week&page_size=1000&keywords=" +keyword+""
     #url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&date=ThisWeek&Location=Florida&page_size=50&"
     #url = "http://api.eventful.com/json/events/search?app_key=29hhnm59QqVdfQWf&category=comedy&location=San+Diego&date=Future&page_size=20"
     # url = "https://www.eventbriteapi.com/v3/events/?token=W5AC5ZM4E7DU3FZLEWHH"
@@ -69,5 +70,8 @@ def getcategory(request):
 
 def getpage(request):
     pass
+
+def test(request):
+    return render(request, 'bored_no_more_app/test.html')
 
     

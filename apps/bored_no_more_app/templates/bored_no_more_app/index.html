@@ -24,6 +24,7 @@
         }
         #address {
             text-align: center;
+            margin-left:40em;
         }
         #desc {
             margin-left: 450px;
@@ -62,18 +63,30 @@
         .spacialize{
             margin-top:1000px;
         }
+
+        #map {
+        height: 100%;
+        width: 20em;
+        height: 20em;
+        position:fixed;
+        } 
+    
+        html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0; }
         
     </style>
     </head>
     <body>
         <div class= 'container-fluid no-padding' id ='wrapper'>
             <div class='row' id='header'>
-                <div class="col-md-8 col-md-offset-0"><h1>Events Near You</h1></div>
+                <div class="col-md-10"><h1>Events Near You</h1></div>
             </div>
             <div class='row'>
             <form class="col-md-12" action="/bored_no_more_app/getcategory" method="post">
             {% csrf_token %}
-                <div class="col-md-4">
+                <div class="col-md-3">
                 <div class="form-group">  
                 <label for="user_input">Choose an Event Category</label>
                 <select class="form-control" name ='category'>
@@ -89,10 +102,17 @@
                 </select></div></div>
                 
                 <div class="form-group">
-                <div class="col-md-4">
+                <div class="col-md-3">
                 <label for="location">Enter a location</label>
                 <input class="form-control" type="text" name='location' id='location'>
                 </div>
+
+                <div class="col-md-3">
+                <label for="keyword">Enter a keyword</label>
+                <input class="form-control" type="text" name='keyword' id='keyword'>
+                </div>
+
+
                 
                 <button class='btn btn-default' type="submit" value="search"><span class="glyphicon glyphicon-search"></span>
                 </button>
@@ -100,44 +120,82 @@
                 
             </form>
             </div>
-            <div class='row' id='page'>
-            <div class="col-md-12">
-            <ul class="pagination">
-                <li><a href="/bored_no_more_app/getpage">1</a></li>
-                <li><a href="/bored_no_more_app/getpage">2</a></li>
-                <li><a href="/bored_no_more_app/getpage">3</a></li>
-                <li><a href="/bored_no_more_app/getpage">4</a></li>
-                <li><a href="/bored_no_more_app/getpage">5</a></li>
-            </ul>
-            </div>
-            </div>
-            <div id="results">
+            
+            <div id="results" class = "col-md-6">
                 Search through the many events that are happening near you!
                 <div class = "spacialize"></div>
             </div>
-            <div class='row' id='page'>
-            <div class="col-md-12">
-            <ul class="pagination">
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-            </ul>
-            </div>
-            </div>
-        </div>
+            <div id="map" class = "col-md-3 col-md-offset-9"></div> 
+            <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+            <script>
+            $().ready(function() {
+                var $scrollingDiv = $("#map");
+
+            $(window).scroll(function(){     
+        
+                $scrollingDiv
+                    .css("position",'fixed' )             
+                          
+                });
+
+            });
+</script>
+
+            <script>
+            var locations = []
+            function initMap(centerpos) {
+
+                            if (centerpos != null){
+                                centerpos = centerpos;
+                            }
+                            else{
+                                centerpos = {lat:38, lng:-98}
+                            }
+
+                            var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 3,
+                            center: centerpos
+                            }
+                            );
+
+                                            // Create an array of alphabetical characters used to label the markers.
+                            labels = []
+                            for (var i = 0; i<21; i++){
+                                labels.push(''+(i+1)+'')
+                            }
+
+                                            // Add some markers to the map.
+                                            // Note: The code uses the JavaScript Array.prototype.map() method to
+                                            // create an array of markers based on a given "locations" array.
+                                            // The map() method here has nothing to do with the Google Maps API.
+                            var markers = locations.map(function(location, i) {
+                            return new google.maps.Marker({
+                            
+                            position: location,
+                            label: labels[i % labels.length]
+                            });
+                            });
+
+                            // Add a marker clusterer to manage the markers.
+                            var markerCluster = new MarkerClusterer(map, markers,
+                                {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+            
+                            }
+        </script>
+        <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+        </script>
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT0ul1BG0aW__Kw7K6ER31X6RkGfHMRYA&callback=initMap">
+        </script> 
+             
+             
+             
         <script>
+            
             //function is used for displaying all events that were searched
             $(document).ready(
                 function(){
-                    // $('#categories').click(
-                    //     function(){
-                    //         $.ajax({
-                    //             url: '/bored_no_more_app/getcategory',
-                    //             method: 'post',
-                    //             data: $(this).serialize(),
-                    //             success: //converts the characters for the internet to use
                     $('form').submit(
                         function( ) {
                             $.post(
@@ -150,13 +208,13 @@
                                     
                                     if (res.events != null) {
                                         $('#results').html(" ")
-                                        for(var i=0; i < res.events.event.length; i++){
-                                            var div = $('<div/>').html("<div id='holder'>");
+                                        for(var i=0; i < 20; i++){
+                                            var div = $('<div>').html("<div class='holder'>");
                                             if(res.events.event[i].image !=null && res.events.event[i].image.url != null){
                                                 if(i > 0){
                                                     if(name != "<h4 id ='name'>" + res.events.event[i].title +"</h4>"){
                                                         logo = "<img id ='image' src='" + res.events.event[i].image.url + "'width='100'></img>";
-                                                        name = "<h4 id ='name'>" + res.events.event[i].title +"</h4>";
+                                                        name = "<h4 id ='name'>"+ (i+1) + "). " + res.events.event[i].title +"</h4>";
                                                         
                                                         $(div).append(name);
                                                         // $(div).append(logo);
@@ -176,12 +234,15 @@
                                                             desc = "<h5 id='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                             $(div).append(desc);
                                                         }
+                                                        if(res.events.event[i].latitude !=null){
+                                                            locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
+                                                        }
                                                         
                                                     }
                                                 }
                                                 if(i==0){
                                                     logo = "<img id='image' src='" + res.events.event[i].image.url + "''width='100'></img>";
-                                                    name = "<h4 id ='name'> " + res.events.event[i].title +"</h4>";
+                                                    name = "<h4 id ='name'> " + (i+1) + "). " + res.events.event[i].title +"</h4>";
                                                     desc = "<h5 id ='desc'>" + res.events.event[i].description+ "</h5>"
                                                     $(div).append(name);
                                                     // $(div).append(logo);
@@ -201,13 +262,16 @@
                                                         desc = "<h5 id='desc'>Description " + res.events.event[i].description+ "</h5>";
                                                         $(div).append(desc);
                                                     }
+                                                    if(res.events.event[i].latitude !=null){
+                                                        locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
+                                                    }
                                                     
                                                 }
                                             }
                                             else{
                                                 if(i > 0){
                                                     if(name != "<h4 id='name'> " + res.events.event[i].title +"</h4>"){
-                                                        name = "<h4 id='name'> " + res.events.event[i].title +"</h4>";
+                                                        name = "<h4 id='name'> " + (i+1) + "). "+ res.events.event[i].title +"</h4>";
                                                         $(div).append(name);
                                                         if(res.events.event[i].venue_address !=null){
                                                             venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
@@ -225,11 +289,15 @@
                                                             desc = "<h5 id='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                             $(div).append(desc);
                                                         }
+                                                    
+                                                        if(res.events.event[i].latitude !=null){
+                                                            locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
+                                                        }
                                                         
                                                     }
                                                 }
                                                 if(i==0){
-                                                    name = "<h4 id='name'> " + res.events.event[i].title +"</h4>";
+                                                    name = "<h4 id='name'> "+ (i+1) + "). " + res.events.event[i].title +"</h4>";
                                                     
                                                     $(div).append(name);
                                                     if(res.events.event[i].venue_address !=null){
@@ -248,27 +316,40 @@
                                                         desc = "<h5 id='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                         $(div).append(desc);
                                                     }
+                                                    if(res.events.event[i].latitude !=null){
+                                                            locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
+                                                    }
                                                     
                                                 }
                                             }
+
+                                            $(div).append('<a href = \'/home\'> linktest </a>' )
                                             
                                             $(div).append('</div>')
                                             
                                             $('#results').append(div)
                                             
                                         }
+                                        console.log(locations)
+                                        centerpos = locations[0]
+                                        initMap(centerpos);
+                                        
                                     }
                                     else {
                                         $('#results').html("<h3>No Events Found :( </h3>")
                                         $('#results').append("<div class = 'spacialize'></div>")
                                     }
+                                    
                                 },'json'
                             );
                             return false;
-                        }
+                         }
+                        
+
+
                     );
                 }
             );
-        </script>
+    </script>
     </body>
 </html>
