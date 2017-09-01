@@ -22,17 +22,23 @@
             padding: 10px;
             text-align: center;
         }
-        #address {
-            text-align: center;
-            margin-left:40em;
+        .address {
+            margin-left: 29em;
+            width: 500px;
+            text-align: justify;
+            font-size:15px;
         }
-        #desc {
-            margin-left: 450px;
+        .desc {
+            margin-left: 31em;
             width: 500px;
             text-align: justify;
         }
+
+        .smaller {
+            font-size:13px;
+        }
         #name {
-            text-align: center;
+            text-align: left;
             border-bottom-style: solid;
             width: 30em;
             margin-left: 24em;
@@ -41,11 +47,19 @@
             text-align: center;
         }
 
-        #start {
-            text-align: center;
+        .start {
+            margin-left: 29em;
+            width: 500px;
+            text-align: justify;
+            font-size:15px;
+        
         }
-        #stop {
-            text-align: center;
+        .stop {
+            margin-left: 29em;
+            width: 500px;
+            text-align: justify;
+            font-size:15px;
+            
         }
         button {
             margin-top: 2em;
@@ -75,13 +89,35 @@
         height: 100%;
         margin: 0;
         padding: 0; }
+
+        #link{
+            margin-left:2em;
+            font-size: 1.5em;
+            padding-bottom: 2em;
+            color:black;
+        }
+
+        #logout{
+            margin-left:.5em;
+            font-size: 1.5em;
+            padding-bottom: 2em;
+            color:black;
+        }
+
+        #submit{
+            margin-left:46.5em;
+            background-color:#e6f2ff;
+            color:black;
+            opacity:.85;
+            border-radius:.3em;
+        }
         
     </style>
     </head>
     <body>
         <div class= 'container-fluid no-padding' id ='wrapper'>
             <div class='row' id='header'>
-                <div class="col-md-10"><h1>Events Near You</h1></div>
+                <div class="col-md-12"><h1>Events Near You</h1></div>
             </div>
             <div class='row'>
             <form class="col-md-12" action="/bored_no_more_app/getcategory" method="post">
@@ -91,14 +127,14 @@
                 <label for="user_input">Choose an Event Category</label>
                 <select class="form-control" name ='category'>
                     <option id ="categories" value="comedy">Comedy</option>
-                    <option id ="categories" value="music">music</option>
-                    <option id ="categories" value="family_fun_kids">family fun kids</option>
-                    <option id ="categories" value="festivals_parades">festivals parades</option>
-                    <option id ="categories" value="movies_film">movies film</option>
-                    <option id ="categories" value="singles_social">singles social</option>
-                    <option id ="categories" value="outdoors_recreation">outdoors recreation</option>
-                    <option id ="categories" value="sports">sports</option>
-                    <option id ="categories" value="food">food</option>
+                    <option id ="categories" value="music">Music</option>
+                    <option id ="categories" value="family_fun_kids">Family Fun/ Kids</option>
+                    <option id ="categories" value="festivals_parades">Festivals/ Parades</option>
+                    <option id ="categories" value="movies_film">Movies/Film</option>
+                    <option id ="categories" value="singles_social">Singles Social</option>
+                    <option id ="categories" value="outdoors_recreation">Outdoors Recreation</option>
+                    <option id ="categories" value="sports">Sports</option>
+                    <option id ="categories" value="food">Food</option>
                 </select></div></div>
                 
                 <div class="form-group">
@@ -116,6 +152,8 @@
                 
                 <button class='btn btn-default' type="submit" value="search"><span class="glyphicon glyphicon-search"></span>
                 </button>
+                <a href = "/userEvents" id = "link"> Your Events </a>
+                <a href = '/logout' id = "logout"> Logout </a>
                 </div>
                 
             </form>
@@ -180,6 +218,7 @@
                             var markerCluster = new MarkerClusterer(map, markers,
                                 {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
+                            locations = [];
             
                             }
         </script>
@@ -210,29 +249,59 @@
                                         $('#results').html(" ")
                                         for(var i=0; i < 20; i++){
                                             var div = $('<div>').html("<div class='holder'>");
+                                            var form = document.createElement('form');
+                                            form.setAttribute('action', '/addEvent');
+                                            form.setAttribute('method', 'POST');
+                                            var input1 = document.createElement('input');
+                                            input1.setAttribute('type', 'hidden');
+                                            var input4 = document.createElement('input');
+                                            input4.setAttribute('type', 'hidden');
+                                            var input5 = document.createElement('input');
+                                            input5.setAttribute('type', 'hidden');
+                                            var input6 = document.createElement('input');
+                                            input6.setAttribute('type', 'hidden');
+                                            var input7 = document.createElement('input');
+                                            input7.setAttribute('type', 'hidden');
                                             if(res.events.event[i].image !=null && res.events.event[i].image.url != null){
                                                 if(i > 0){
                                                     if(name != "<h4 id ='name'>" + res.events.event[i].title +"</h4>"){
                                                         logo = "<img id ='image' src='" + res.events.event[i].image.url + "'width='100'></img>";
                                                         name = "<h4 id ='name'>"+ (i+1) + "). " + res.events.event[i].title +"</h4>";
+                                                        input7.setAttribute('type', 'hidden');
+                                                        input7.setAttribute('name', 'title');
+                                                        input7.setAttribute('value', res.events.event[i].title);
                                                         
                                                         $(div).append(name);
                                                         // $(div).append(logo);
                                                         if(res.events.event[i].venue_address !=null){
-                                                            venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
+                                                            venue_address = "<h5 class='address'>Venue Address: <a class = 'smaller'>" + res.events.event[i].venue_address+ "</a></h5>";
                                                             $(div).append(venue_address);
+                                                            // venue_input = "<input type = 'hidden' name ='address' value ='" + res.events.event[i].venue_address + "'/>";
+                                                            // $(form).append(venue_input);
+                                                            input1.setAttribute('type', 'hidden');
+                                                            input1.setAttribute('name', 'address');
+                                                            input1.setAttribute('value', res.events.event[i].venue_address);
                                                         }
                                                         if(res.events.event[i].start_time !=null){
-                                                            start_time = "<p id ='start'>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                            start_time = "<h5 class ='start'>Event Starts at: <a class = 'smaller'>"+ res.events.event[i].start_time+ "</a></h5>";
                                                             $(div).append(start_time);
+                                                            input4.setAttribute('type', 'hidden');
+                                                            input4.setAttribute('name', 'start');
+                                                            input4.setAttribute('value', res.events.event[i].start_time);
                                                         }
                                                         if(res.events.event[i].stop_time !=null){
-                                                            stop_time = "<p id ='stop'>Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                            stop_time = "<h5 class ='stop'>Event Ends at: <a class = 'smaller'>" + res.events.event[i].stop_time+ "</a></h5>";
                                                             $(div).append(stop_time);
+                                                            input5.setAttribute('type', 'hidden');
+                                                            input5.setAttribute('name', 'stop');
+                                                            input5.setAttribute('value', res.events.event[i].stop_time);
                                                         }
                                                         if(res.events.event[i].description !=null){
-                                                            desc = "<h5 id='desc'>Description: " + res.events.event[i].description+ "</h5>";
+                                                            desc = "<h5 class='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                             $(div).append(desc);
+                                                            input6.setAttribute('type', 'hidden');
+                                                            input6.setAttribute('name', 'desc');
+                                                            input6.setAttribute('value', res.events.event[i].description);
                                                         }
                                                         if(res.events.event[i].latitude !=null){
                                                             locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
@@ -245,22 +314,38 @@
                                                     name = "<h4 id ='name'> " + (i+1) + "). " + res.events.event[i].title +"</h4>";
                                                     desc = "<h5 id ='desc'>" + res.events.event[i].description+ "</h5>"
                                                     $(div).append(name);
+                                                    input7.setAttribute('type', 'hidden');
+                                                    input7.setAttribute('name', 'title');
+                                                    input7.setAttribute('value', res.events.event[i].title);
                                                     // $(div).append(logo);
                                                     if(res.events.event[i].venue_address !=null){
-                                                            venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
+                                                            venue_address = venue_address = "<h5 class='address'>Venue Address: <a class = 'smaller'>" + res.events.event[i].venue_address+ "</a></h5>";
                                                             $(div).append(venue_address);
+        
+                                                            input1.setAttribute('type', 'hidden');
+                                                            input1.setAttribute('name', 'address');
+                                                            input1.setAttribute('value', res.events.event[i].venue_address);
                                                         }
                                                     if(res.events.event[i].start_time !=null){
-                                                        start_time = "<p id = 'start'>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                        start_time = "<h5 class ='start'>Event Starts at: <a class = 'smaller'>"+ res.events.event[i].start_time+ "</a></h5>";
                                                         $(div).append(start_time);
+                                                        input4.setAttribute('type', 'hidden');
+                                                        input4.setAttribute('name', 'start');
+                                                        input4.setAttribute('value', res.events.event[i].start_time);
                                                         }
                                                     if(res.events.event[i].stop_time !=null){
-                                                        stop_time = "<p id ='stop'>Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                        stop_time = "<h5 class ='stop'>Event Ends at: <a class = 'smaller'>" + res.events.event[i].stop_time+ "</a></h5>";
                                                         $(div).append(stop_time);
+                                                        input5.setAttribute('type', 'hidden');
+                                                        input5.setAttribute('name', 'stop');
+                                                        input5.setAttribute('value', res.events.event[i].stop_time);
                                                     }
                                                     if(res.events.event[i].description !=null){
-                                                        desc = "<h5 id='desc'>Description " + res.events.event[i].description+ "</h5>";
+                                                        desc = "<h5 class='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                         $(div).append(desc);
+                                                        input6.setAttribute('type', 'hidden');
+                                                        input6.setAttribute('name', 'desc');
+                                                        input6.setAttribute('value', res.events.event[i].description);
                                                     }
                                                     if(res.events.event[i].latitude !=null){
                                                         locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
@@ -272,22 +357,39 @@
                                                 if(i > 0){
                                                     if(name != "<h4 id='name'> " + res.events.event[i].title +"</h4>"){
                                                         name = "<h4 id='name'> " + (i+1) + "). "+ res.events.event[i].title +"</h4>";
+                                                        input7.setAttribute('type', 'hidden');
+                                                        input7.setAttribute('name', 'title');
+                                                        input7.setAttribute('value', res.events.event[i].title);
                                                         $(div).append(name);
                                                         if(res.events.event[i].venue_address !=null){
-                                                            venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
+                                                            venue_address = venue_address = "<h5 class='address'>Venue Address: <a class = 'smaller'>" + res.events.event[i].venue_address+ "</a></h5>";
                                                             $(div).append(venue_address);
+                                                            // venue_input = "<input type = 'hidden' name ='address' value ='" + res.events.event[i].venue_address + "'/>";
+                                                            // $(form).append(venue_input);
+                                                            input1.setAttribute('type', 'hidden');
+                                                            input1.setAttribute('name', 'address');
+                                                            input1.setAttribute('value', res.events.event[i].venue_address);
                                                         }
                                                         if(res.events.event[i].start_time !=null){
-                                                            start_time = "<p id = 'start'>Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                            start_time = "<h5 class ='start'>Event Starts at: <a class = 'smaller'>"+ res.events.event[i].start_time+ "</a></h5>";
                                                             $(div).append(start_time);
+                                                            input4.setAttribute('type', 'hidden');
+                                                            input4.setAttribute('name', 'start');
+                                                            input4.setAttribute('value', res.events.event[i].start_time);
                                                         }
                                                         if(res.events.event[i].stop_time !=null){
-                                                            stop_time = "<p id ='stop'>Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                            stop_time = "<h5 class ='stop'>Event Ends at: <a class = 'smaller'>" + res.events.event[i].stop_time+ "</a></h5>";
                                                             $(div).append(stop_time);
+                                                            input5.setAttribute('type', 'hidden');
+                                                            input5.setAttribute('name', 'stop');
+                                                            input5.setAttribute('value', res.events.event[i].stop_time);
                                                     }
                                                         if(res.events.event[i].description !=null){
-                                                            desc = "<h5 id='desc'>Description: " + res.events.event[i].description+ "</h5>";
+                                                            desc = "<h5 class='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                             $(div).append(desc);
+                                                            input6.setAttribute('type', 'hidden');
+                                                            input6.setAttribute('name', 'desc');
+                                                            input6.setAttribute('value', res.events.event[i].description);
                                                         }
                                                     
                                                         if(res.events.event[i].latitude !=null){
@@ -298,23 +400,39 @@
                                                 }
                                                 if(i==0){
                                                     name = "<h4 id='name'> "+ (i+1) + "). " + res.events.event[i].title +"</h4>";
-                                                    
+                                                    input7.setAttribute('type', 'hidden');
+                                                    input7.setAttribute('name', 'title');
+                                                    input7.setAttribute('value', res.events.event[i].title);
                                                     $(div).append(name);
                                                     if(res.events.event[i].venue_address !=null){
-                                                            venue_address = "<h5 id='address'>Venue Address: " + res.events.event[i].venue_address+ "</h5>";
+                                                            venue_address = venue_address = "<h5 class='address'>Venue Address: <a class = 'smaller'>" + res.events.event[i].venue_address+ "</a></h5>";
                                                             $(div).append(venue_address);
+                                                            // venue_input = "<input type = 'hidden' name ='address' value ='" + res.events.event[i].venue_address + "'/>";
+                                                            // $(form).append(venue_input);
+                                                            input1.setAttribute('type', 'hidden');
+                                                            input1.setAttribute('name', 'address');
+                                                            input1.setAttribute('value', res.events.event[i].venue_address);
                                                     }
                                                     if(res.events.event[i].start_time !=null){
-                                                        start_time = "<p id = 'start' >Event Starts at: "+ res.events.event[i].start_time+ "</p>";
+                                                        start_time = "<h5 class ='start'>Event Starts at: <a class = 'smaller'>"+ res.events.event[i].start_time+ "</a></h5>";
                                                         $(div).append(start_time);
+                                                        input4.setAttribute('type', 'hidden');
+                                                        input4.setAttribute('name', 'start');
+                                                        input4.setAttribute('value', res.events.event[i].start_time);
                                                         }
                                                     if(res.events.event[i].stop_time !=null){
-                                                        stop_time = "<p id = 'stop'> Event Ends at: " + res.events.event[i].stop_time+ "</p>";
+                                                        stop_time = "<h5 class ='stop'>Event Ends at: <a class = 'smaller'>" + res.events.event[i].stop_time+ "</a></h5>";
                                                         $(div).append(stop_time);
+                                                        input5.setAttribute('type', 'hidden');
+                                                        input5.setAttribute('name', 'stop');
+                                                        input5.setAttribute('value', res.events.event[i].stop_time);
                                                     }
                                                     if(res.events.event[i].description !=null){
-                                                        desc = "<h5 id='desc'>Description: " + res.events.event[i].description+ "</h5>";
+                                                        desc = "<h5 class='desc'>Description: " + res.events.event[i].description+ "</h5>";
                                                         $(div).append(desc);
+                                                        input6.setAttribute('type', 'hidden');
+                                                        input6.setAttribute('name', 'desc');
+                                                        input6.setAttribute('value', res.events.event[i].description);
                                                     }
                                                     if(res.events.event[i].latitude !=null){
                                                             locations.push({lat:parseFloat(res.events.event[i].latitude), lng: parseFloat(res.events.event[i].longitude)})
@@ -323,16 +441,67 @@
                                                 }
                                             }
 
-                                            $(div).append('<a href = \'/home\'> linktest </a>' )
+                                        
                                             
                                             $(div).append('</div>')
+
+                                            // $(form).append("<input type = 'submit' value = 'addEvent'/>")
+                                            // $(form).append("</form>")
+                                            // $(form).append("</div>")
+
+
+                                           
                                             
                                             $('#results').append(div)
+                                            // $('#results').append(form)
+
+                                            input2 = document.createElement('input');
+                                            input2.setAttribute('type', 'submit');
+                                            input2.setAttribute('value', 'Add Event');
+                                            input2.setAttribute('class', 'btn btn-primary');
+                                            input2.setAttribute('id', 'submit');
+
+                                            function getCookie(name) {
+                                            var cookieValue = null;
+                                            if (document.cookie && document.cookie !== '') {
+                                                var cookies = document.cookie.split(';');
+                                                for (var i = 0; i < cookies.length; i++) {
+                                                    var cookie = jQuery.trim(cookies[i]);
+                                                
+                                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            return cookieValue;
+                                            }
+                                            var csrftoken = getCookie('csrftoken');
+                                            
+                                            input3 = document.createElement('input');
+                                            input3.type = 'hidden';
+                                            input3.name = 'csrfmiddlewaretoken';
+                                            input3.value = csrftoken;
+                                    
+
+                                            form.appendChild(input3);
+                                            form.appendChild(input1);
+                                            form.appendChild(input2);
+                                            form.appendChild(input4);
+                                            form.appendChild(input5);
+                                            form.appendChild(input6);
+                                            form.appendChild(input7);
+                                        
+
+                        
+                                            $('#results').append(form);
+
                                             
                                         }
                                         console.log(locations)
                                         centerpos = locations[0]
                                         initMap(centerpos);
+                                        
                                         
                                     }
                                     else {

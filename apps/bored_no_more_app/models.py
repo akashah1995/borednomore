@@ -27,7 +27,6 @@ class UserManager(models.Manager):
         return errors
 
 
-
 class User(models.Model):
     firstname = models.CharField(max_length = 255)
     username = models.CharField(max_length = 255)
@@ -37,10 +36,23 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()
 
+class Event(models.Model):
+    name = models.CharField(max_length = 255)
+    start = models.CharField(max_length = 255)
+    stop = models.CharField(max_length = 255)
+    location = models.CharField(max_length = 255)
+    description = models.CharField(max_length = 255)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    user = models.ForeignKey(User, related_name = "events")
+
 class Group(models.Model):
     groupname = models.CharField(max_length = 255)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+
+
+
 
 
 

@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from models import *
-import requests
 import bcrypt
+import requests
 # HTML-based index method
 
 def intro(request):
@@ -24,6 +24,9 @@ def register(request):
         password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
         print firstname, username, email, password
         User.objects.create(firstname = firstname, username = username, email = email, password = password)
+        user = User.objects.get(username = username)
+        request.session['loggedIn'] = user.id
+
         return redirect(index)
 
 def login(request):
@@ -39,6 +42,7 @@ def login(request):
     print correctpw
 
     if bcrypt.checkpw(password.encode(), correctpw.encode()):
+        request.session['loggedIn'] = user.id
         return redirect(index)
 
     else:
@@ -73,5 +77,61 @@ def getpage(request):
 
 def test(request):
     return render(request, 'bored_no_more_app/test.html')
+
+def addEvent(request):
+    try:
+        address = request.POST['address']
+    except:
+        address = " "
+    try:
+        start = request.POST['start']
+    except:
+        start = " "
+    
+    try:
+        stop = request.POST['stop']
+    except:
+        stop = " "
+    
+    try:
+        description = request.POST['desc']
+    except:
+        description = " "
+    
+    name = request.POST['title']
+    Event.objects.create(name = name, location = address, start = start, stop = stop, description = description, user = User.objects.get(id = request.session['loggedIn']) )
+    # event = Event.objects.order_by('-id')[0]
+    user = User.objects.get(id = request.session['loggedIn'])
+    users = Event.objects.order_by('-id')[0].user.username
+    events = user.events
+
+    return redirect(index)
+
+def userEvents(request):
+    user = User.objects.get(id = request.session['loggedIn'])
+    events = user.events.values()
+    context = {
+        'events':events,
+        'user':user
+    }
+
+    return render(request, 'bored_no_more_app/userPage.html', context)
+
+def deleteEvent(request, variable):
+    Event.objects.get(id = variable).delete()
+
+    return redirect(userEvents)
+
+def logout(request):
+    del request.session['loggedIn']
+    return redirect(intro)
+
+
+
+
+
+
+
+
 
     

@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>{{user.firstname}}'s Saved Events</title>
+        <script
+        src="http://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+        <link rel="stylesheet" type="text/css" href="assets/css/Header-Nightsky.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <style>
+            #subwrapper{
+                height: 45em;
+                width: 100em;
+                overflow:scroll;
+            }
+            #wrapper{
+                height: 60em;
+                width: 100em;
+
+                background-size: 100em 60em;
+                {% load static %}
+                background-image: url("{% static 'bored_no_more_app/eventRoom.jpg' %}");
+                background-attachment:fixed;
+            }
+            #header{
+                height: 9em;
+                text-align:center;
+                padding-bottom: 2em;
+                background-color:black;
+                opacity: .6;
+
+            }
+            #information{
+                text-align:justify;
+                margin-top:4em;
+            }
+
+            #box{
+                border-style:solid;
+                box-shadow: 5px 5px 2px black;
+                background-color:whitesmoke;
+                opacity: 0.9;
+            }
+
+            .name{
+                font-family: sans-serif;
+                font-weight: bolder;
+            }
+
+            #top{
+                margin-top: 2em;
+                height: 4em;
+                color: whitesmoke;
+                /* background-color:whitesmoke; */
+                /* opacity: .75; */
+                /* vertical-align:middle; */
+                /* border-radius: 5px; */
+                /* padding-bottom: 5em; */
+        
+            }
+
+            #placeholder{
+                margin-top:25em;
+                height: 5em;
+                width: 100em;
+            }
+
+            .link{
+                font-weight:bolder;
+                margin-left:22em;
+            }
+
+            #subwrapper2{
+                height:3em;
+            }
+
+            #back{
+                margin-left: 3.6em;
+                margin-top: 10em;
+                color:black;
+                font-size:1.3em;
+                font-weight:bold;
+                
+            }
+
+            #logout{
+                font-size:1.3em;
+                font-weight:bold;
+                color:black;
+                margin-left: .2em;
+                
+            }
+
+
+
+
+        </style>
+    </head>
+    <body>
+        <div class= 'container-fluid no-padding' id ='wrapper'>
+            <div class='row' id='header'>
+                <div class="col-md-6 col-md-offset-3" id = "top" ><h1 id = "topStuff">Here Are Your Events, {{user.firstname}}!</h1></div>
+                <br>
+            </div>
+            <div class = 'row' id = "subwrapper">
+            {% for event in events %}
+                <div class = 'row' id = "information">
+                    <div class = "col-md-6 col-md-offset-3" id = "box">
+                        <p class = "content"><a class = "name"> Name:</a> {{event.name}} </p>
+                        <p class = "content"><a class = "name"> Location:</a> {{event.location}} </p>
+                        <p class = "content"><a class = "name"> Event:</a> {{event.start}}</p>
+                        <p class = "content"><a class = "name"> Stop:</a> {{event.stop}}</p>
+                        <p class = "content"><a class = "name"> Description:</a> {{event.description}}</p>
+                        <a href = "/deleteEvent/{{event.id}}" class = "link"> Delete Event </a>
+                
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <div class = "row" id = "subwrapper2">
+                <div class =  "col-md-3 col-md-offset-5">
+                    <a href = "/home" id = "back" > Back </a> <a href = '/logout' id = "logout"> Logout </a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
